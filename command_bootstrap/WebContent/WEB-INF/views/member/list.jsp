@@ -112,7 +112,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		            		<c:forEach items="${memberList }" var="member">
 		     						
 		     				
-		     					 <tr  onclick="" style="cursor:pointer;">
+		     					 <tr  onclick="OpenWindow('detail?id=${member.id}','회원상세',700,800);" style="cursor:pointer;">
 		            		  	   	<td>사진</td>
 		            		  	   	<td>${member.id }</td>
 				              		<td>${member.pwd }</td>
@@ -207,9 +207,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		
 	}
 	
+
+
 	
-	
-	
+
 	
   </script>
  <!-- Control Sidebar -->
@@ -244,6 +245,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="<%=request.getContextPath() %>/resources/bootstrap/dist/js/adminlte.min.js"></script>
 
 <!-- common -->
-<script src="<%=request.getContextPath() %>/resources/js/common.js"></script>
+<script src="<%=request.getContextPath() %>/resources/js/common.js" ></script>
 </body>
 </html>
+
+
+
+
+
+

@@ -13,14 +13,17 @@ import com.jsp.datasource.OracleMybatisSqlSessionFactory;
 import com.jsp.dto.MemberVO;
 
 public class TestMemberDAOImpl {
-	private SqlSessionFactory factory = new OracleMybatisSqlSessionFactory();
+	
+	private SqlSessionFactory factory 
+					= new OracleMybatisSqlSessionFactory();
+	
 	private SqlSession session;
 	private MemberDAO memberDAO = new MemberDAOImpl();
+	
 	@Before
 	public void init()throws Exception{
-		session = factory.openSession();
-	}
-	
+		session=factory.openSession();
+	}	
 	@After
 	public void close()throws Exception{
 		if(session!=null) session.close();
@@ -29,8 +32,12 @@ public class TestMemberDAOImpl {
 	@Test
 	public void testSelectMemberList() throws Exception{
 		List<MemberVO> memberList = memberDAO.selectMemberList(session);
-		Assert.assertEquals(7, memberList.size());
+		
+		Assert.assertEquals(7,memberList.size());
 	}
-	
-	
 }
+
+
+
+
+
