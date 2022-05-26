@@ -1,7 +1,6 @@
 package com.jsp.command;
 
 public class SearchCriteria extends Criteria {
-	
 	private String keyword;
 	private String searchType;
 	

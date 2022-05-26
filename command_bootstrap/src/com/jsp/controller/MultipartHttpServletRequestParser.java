@@ -1,5 +1,6 @@
 package com.jsp.controller;
 
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,57 +18,49 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.jsp.exception.NotMultipartFormDataException;
 
 public class MultipartHttpServletRequestParser {
+	private Map<String, List<String>> paramString = new HashMap<String, List<String>>();
+	private Map<String, List<FileItem>> paramFile = new HashMap<String, List<FileItem>>();
 	
-	private Map<String, List<String>> paramString 
-					= new HashMap<String, List<String>>();
-	private Map<String, List<FileItem>> paramFile 
-					= new HashMap<String, List<FileItem>>();
-	
-	public MultipartHttpServletRequestParser(HttpServletRequest request, 
-											 int memory_threshold, 
-											 int max_file_size,
-											 int max_request_size)
-											throws NotMultipartFormDataException, 
-												   UnsupportedEncodingException,		
-												   FileUploadException {
-		
-		// request 파일 첨부 여부 확인.
-		if (!ServletFileUpload.isMultipartContent(request)) {
+	public MultipartHttpServletRequestParser(HttpServletRequest request, int memory_threshold, int max_file_size, int max_request_size) 
+			throws NotMultipartFormDataException, UnsupportedEncodingException, FileUploadException {
+		//request 파일 첨부 여부 확인
+		if(!ServletFileUpload.isMultipartContent(request)) {
 			throw new NotMultipartFormDataException();
 		}
 		
-		ServletFileUpload upload = 
-			ServletFileUploadBuilder.build( memory_threshold,
-											max_file_size,
-											max_request_size);
+		//빌더를 이용해 ServletFileUpload 생성
+		ServletFileUpload upload = ServletFileUploadBuilder.build(memory_threshold, max_file_size, max_file_size);
 		
-
+		//request를 파싱해서 FileItem를 얻어옴
 		List<FileItem> formItems = upload.parseRequest(request);
 		
-		if(formItems !=null) for (FileItem item : formItems) {
-			
+		
+		//집합체 for문을 통해서 paramString과 paramFile를 초기화
+		if(formItems != null) for(FileItem item : formItems) {
 			String paramName = item.getFieldName();
 			
-			if (item.isFormField()) { //일반 parameter : text
+			if(item.isFormField()) {
+				//text
 				List<String> paramValueList = this.paramString.get(paramName);
-				if(paramValueList==null) {
+				if(paramValueList == null) { //없으면 만들어서 넣고 있으면 그냥 넣는다
 					paramValueList = new ArrayList<String>();
-					this.paramString.put(paramName, paramValueList); 
+					this.paramString.put(paramName, paramValueList);
 				}
 				paramValueList.add(item.getString("utf-8"));
-			}else { //file
+			} else {
+				//file
 				List<FileItem> files = this.paramFile.get(paramName);
 				
-				if (files == null) {
+				if(files == null) {
 					files = new ArrayList<FileItem>();
 					this.paramFile.put(paramName, files);
 				}
-				
 				files.add(item);
+				
 			}
-		}
+		} 
+		
 	}
-	
 	
 	public String getParameter(String paramName) {
 		List<String> paramValueList = paramString.get(paramName);
@@ -79,8 +72,9 @@ public class MultipartHttpServletRequestParser {
 	
 	public String[] getParameterValues(String paramName) {
 		List<String> paramValueList = paramString.get(paramName);
-		String[] paramValueArray=null;
-		if(paramValueList!=null) {
+		
+		String[] paramValueArray = null;
+		if(paramValueList != null) {
 			paramValueArray = new String[paramValueList.size()];
 			paramValueList.toArray(paramValueArray);
 		}
@@ -93,37 +87,48 @@ public class MultipartHttpServletRequestParser {
 		FileItem result = null;
 		
 		if(itemList != null) result = itemList.get(0);
-			
-		return result;	
+		
+		return result;
 	}
+	
 	public FileItem[] getFileItems(String paramName) {
 		List<FileItem> items = paramFile.get(paramName);
-		FileItem[] files =null;
-		if(items!=null) {
+		FileItem[] files = null;
+		
+		if(items != null) {
 			files = new FileItem[items.size()];
 			items.toArray(files);
 		}
+		
 		return files;
 	}
 	
 	public Enumeration<String> getParameterNames() {
 		List<String> paramNames = new ArrayList<String>();
 		
-		if (paramString.size() > 0) {
-			for (String paramName : paramString.keySet()) {
+		if(paramString.size() > 0) {
+			for(String paramName : paramString.keySet()) {
 				paramNames.add(paramName);
 			}
-		}	
-		if (paramFile.size() > 0) {
-			for (String paramName : paramFile.keySet()) {
+		}
+		
+		if(paramFile.size() > 0) {
+			for(String paramName : paramFile.keySet()) {
 				paramNames.add(paramName);
 			}
-		}	
-		Enumeration<String> result = Collections.enumeration(paramNames);		
+		}
+		Enumeration<String> result = Collections.enumeration(paramNames);
 		
 		return result;
 	}
 }
+
+
+
+
+
+
+
 
 
 

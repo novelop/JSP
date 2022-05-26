@@ -5,15 +5,13 @@ import java.util.Date;
 import com.jsp.dto.MemberVO;
 
 public class MemberRegistCommand {
-	
-	private String id;  //아이디
-	private String pwd; //패스워드
-	private String name="---"; //이름
-	private String[] phone; //전화번호
-	private String email;  //이메일
-	private String picture; // 사진파일 경로/파일명
+	private String id;
+	private String pwd;
+	private String name = "---";
+	private String[] phone;
+	private String email;
+	private String picture; //member 테이블에 있다는 것은 1인당 사진은 1장씩, 경로로 저장된다는 것
 	private String authority;
-	
 	
 	public String getAuthority() {
 		return authority;
@@ -59,14 +57,13 @@ public class MemberRegistCommand {
 	}
 	
 	public MemberVO toMemberVO() {
-		
 		String phone = "";
 		
-		for (String data : this.phone) {
+		for(String data : this.phone) {
 			phone += data;
 		}
 		
-		// MemberVO setting
+		//MemberVO setting
 		MemberVO member = new MemberVO();
 		member.setId(id);
 		member.setPwd(pwd);
@@ -75,12 +72,24 @@ public class MemberRegistCommand {
 		member.setPicture(picture);
 		member.setAuthority(authority);
 		member.setName(name);
-		member.setRegDate(new Date());
+		member.setRegdate(new Date());
 		
 		return member;
+		
 	}
 	
+	
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

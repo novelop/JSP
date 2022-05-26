@@ -11,72 +11,59 @@ import com.jsp.command.Criteria;
 import com.jsp.command.PageMaker;
 import com.jsp.command.SearchCriteria;
 import com.jsp.dao.SearchMemberDAO;
-import com.jsp.dao.SearchMemberDAOImpl;
-import com.jsp.datasource.OracleMybatisSqlSessionFactory;
 import com.jsp.dto.MemberVO;
 import com.jsp.exception.NotMatchSearchCriteria;
 
-public class SearchMemberServiceImpl extends MemberServiceImpl {
-
-	private SqlSessionFactory sqlSessionFactory;	
-	private SearchMemberDAO memberDAO;	
-
+public class SearchMemberServiceImpl extends MemberServiceImpl{
+	
+	private SqlSessionFactory sqlSessionFactory;
+	private SearchMemberDAO memberDAO;
 
 	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+		super.setSqlSessionFactory(sqlSessionFactory);
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
+
 	public void setMemberDAO(SearchMemberDAO memberDAO) {
+		super.setMemberDAO(memberDAO);
 		this.memberDAO = memberDAO;
 	}
 
-
-
-
-
 	@Override
-	public Map<String,Object> getMemberListForPage(Criteria cri) throws Exception {
+	public Map<String, Object> getMemberListForPage(Criteria cri) throws Exception {
 		
 		if(cri instanceof SearchCriteria) {
-			SearchCriteria searchCri  = (SearchCriteria)cri;
+			SearchCriteria searchCri = (SearchCriteria) cri;
 			
-			SqlSession session= sqlSessionFactory.openSession(false);
-			Map<String,Object> dataMap =null;
+			SqlSession session = sqlSessionFactory.openSession(false);
+			Map<String, Object> dataMap = null;
 			
 			try {
-				
-				//처리.......
-				List<MemberVO> memberList 
-					= memberDAO.selectSearchMemberList(session, searchCri);
+				//...처리
+				List<MemberVO> memberList = memberDAO.selectSearchMemberList(session, searchCri);
 				
 				PageMaker pageMaker = new PageMaker();
 				pageMaker.setCri(cri);
-				pageMaker.setTotalCount(memberDAO.selectSearchMemberListCount(session,searchCri));
+				pageMaker.setTotalCount(memberDAO.selectSearchMemberListCount(session, searchCri));
 				
-				dataMap = new HashMap<String,Object>();
+				dataMap = new HashMap<String, Object>();
 				dataMap.put("memberList", memberList);
-				dataMap.put("pageMaker",pageMaker);
+				dataMap.put("pageMaker", pageMaker);
 				
 				session.commit();
-				
-			}catch(Exception e) {
+			} catch (Exception e) {
 				session.rollback();
 				e.printStackTrace();
 				throw e;
-			}finally {
-				if(session!=null) session.close();
+			} finally {
+				if(session != null) session.close();
 			}
+			
 			return dataMap;
 			
-		}else {
+		} else {
 			throw new NotMatchSearchCriteria();
-		}	
-		
+		}
 	}
 
 }
-
-
-
-
-
-

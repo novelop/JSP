@@ -25,7 +25,7 @@ public class SearchMemberDAOImpl extends MemberDAOImpl implements SearchMemberDA
 	@Override
 	public int selectSearchMemberListCount(SqlSession session, SearchCriteria cri) throws Exception {
 		int totalCount 
-		= session.selectOne("Member-Mapper.selectSearchMemberListCount",cri);
+		= session.selectOne("Member-Mapper.selectSearchMemberListCount", cri);
 		
 		return totalCount;
 	}
